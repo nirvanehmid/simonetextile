@@ -507,8 +507,16 @@ def page3_predict():
     # Select the features for prediction
     X_pred = df[['service','distanceKM','mois','age','ancienneté','enfant','ANNEE']]
 
+    # Debugging: print out X_pred DataFrame
+    st.write("X_pred DataFrame:")
+    st.write(X_pred)
+
     # Predict absence using the trained model
     predicted_absence = rf_classifier.predict(X_pred)
+
+    # Debugging: print out predicted_absence
+    st.write("Predicted Absence:")
+    st.write(predicted_absence)
 
     # Assign the predicted values to the 'Absence' column
     df['Absence'] = predicted_absence
@@ -554,6 +562,7 @@ def page3_predict():
     # Button to return to page 1
     if st.button("Retourner à la page principale"):
         st.session_state.page = 'page1'
+
 # Fonction pour afficher la deuxième page pour ajouter un employé
 def page2_add():
     st.title('Ajouter un employé')
