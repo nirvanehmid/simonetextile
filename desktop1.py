@@ -14,35 +14,53 @@ y = dataset['absence']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 rf_classifier = RandomForestClassifier()
 rf_classifier.fit(X_train, y_train)
-conn = pyodbc.connect(
-    r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-    r'DBQ=C:\Users\Asus\Desktop\pfatool\db.accdb;'
-)
+import sqlite3
+sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+
+# Connect to the SQLite database
+conn = sqlite3.connect(sqlite_db_path)
+
 def fetch_data(service=None):
+    # Define the path to your SQLite database
+    sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect(sqlite_db_path)
+    
     cursor = conn.cursor()
     if service:
-        query = f"SELECT matricule, enfant, service, age, anciennete, distanceKM, absence FROM simotex WHERE service = ?"
+        query = "SELECT matricule, enfant, service, age, anciennete, distanceKM, absence FROM simotex WHERE service = ?"
         cursor.execute(query, (service,))
     else:
         query = "SELECT matricule, enfant, service, age, anciennete, distanceKM, absence FROM simotex"
         cursor.execute(query)
     data = cursor.fetchall()
 
+    # Close the connection
+    conn.close()
+
     return np.array(data)
 
+
+import sqlite3
+
+# Define the path to your SQLite database
+sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+
 def add_employee(matricule, enfant, service, age, anciennete, distanceKM, absence=None):
+    # Connect to the SQLite database
+    conn = sqlite3.connect(sqlite_db_path)
     cursor = conn.cursor()
 
     # Check if the matricule already exists in the database
     cursor.execute("SELECT COUNT(*) FROM simotex WHERE matricule = ?", (matricule,))
     existing_rows = cursor.fetchone()[0]
     if existing_rows > 0:
-        st.error("Matricule déjà existante. Veuillez saisir un matricule différent.")
+        print("Matricule déjà existante. Veuillez saisir un matricule différent.")
         return
-    else :
-        st.success("Employé ajouté avec succès.")
+    else:
+        print("Employé ajouté avec succès.")
 
-    # Insert the new employee data into the simotex table
     query = """
         INSERT INTO simotex (matricule, enfant, service, age, anciennete, distanceKM, absence)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -52,8 +70,13 @@ def add_employee(matricule, enfant, service, age, anciennete, distanceKM, absenc
     # Commit the transaction
     conn.commit()
 
+    # Close the connection
+    conn.close()
+
 
 def delete_employee(matricule):
+    # Connect to the SQLite database
+    conn = sqlite3.connect(sqlite_db_path)
     cursor = conn.cursor()
 
     # Check if the matricule exists in the database
@@ -62,7 +85,7 @@ def delete_employee(matricule):
 
     if existing_rows == 0:
         # Matricule not found
-        st.error("Matricule non trouvé.")
+        print("Matricule non trouvé.")
         return
 
     # Delete the employee data from the simotex table
@@ -73,7 +96,11 @@ def delete_employee(matricule):
     conn.commit()
 
     # Matricule deleted successfully
-    st.success("Matricule supprimé avec succès.")
+    print("Matricule supprimé avec succès.")
+
+    # Close the connection
+    conn.close()
+
 
 
 def add_data_to_excel(enfant=None, service=None, age=None, anciennete=None, distanceKM=None, mois=None, ANNEE=None,
