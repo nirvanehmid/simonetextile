@@ -1,6 +1,5 @@
 import streamlit as st
 import numpy as np
-import pyodbc
 import pandas as pd
 
 excel_file_path = "end.xlsx"
