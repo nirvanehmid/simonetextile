@@ -1,5 +1,3 @@
 numpy
 pandas
-sqlite3
 scikit-learn
-plotly
