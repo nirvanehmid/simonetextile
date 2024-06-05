@@ -499,7 +499,7 @@ def page3_predict():
     df['mois'] = df['Mois'].map(encoded_mois)
 
     # Scale numerical features
-    df['enfant'] = df['Enfant'].map(lambda x: scaled_enfant[x])
+    df['enfant'] = df['Enfant'].map(lambda x: scaled_enfant.get(x, None))
     df['ANNEE'] = df['Année'].map(scaled_annee)
     df['ancienneté'] = df['Ancienneté'].map(scaled_anciennete)
     df['age']=df['Age'].map(scaled_age)
