@@ -15,14 +15,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 rf_classifier = RandomForestClassifier()
 rf_classifier.fit(X_train, y_train)
 import sqlite3
-sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+sqlite_db_path = r'data.sqlite'
 
 # Connect to the SQLite database
 conn = sqlite3.connect(sqlite_db_path)
 
 def fetch_data(service=None):
     # Define the path to your SQLite database
-    sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+    sqlite_db_path = r'data.sqlite'
 
     # Connect to the SQLite database
     conn = sqlite3.connect(sqlite_db_path)
@@ -45,7 +45,7 @@ def fetch_data(service=None):
 import sqlite3
 
 # Define the path to your SQLite database
-sqlite_db_path = r'C:\Users\Asus\Desktop\pfatool\data.sqlite'
+sqlite_db_path = r'data.sqlite'
 
 def add_employee(matricule, enfant, service, age, anciennete, distanceKM, absence=None):
     # Connect to the SQLite database
